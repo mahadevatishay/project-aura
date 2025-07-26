@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { DataProvider } from './context/DataContext'; // Import your DataProvider
+// Remove DataProvider and ThemeProvider imports from here
+// import { DataProvider } from './context/DataContext';
+// import { ThemeProvider, useTheme } from './context/ThemeContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,9 +15,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Metadata MUST be exported from a Server Component
 export const metadata: Metadata = {
-  title: "Project Aura: Mood & Productivity Dashboard", // Updated title
-  description: "An AI-powered dashboard to track mood and productivity, with personalized insights.", // Updated description
+  title: "Project Aura: Mood & Productivity Dashboard",
+  description: "An AI-powered dashboard to track mood and productivity, with personalized insights.",
 };
 
 export default function RootLayout({
@@ -24,14 +27,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // The <html> tag must be returned directly by the root layout
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Wrap your children with the DataProvider */}
-        <DataProvider>
-          {children}
-        </DataProvider>
+        {/* Children will be wrapped by ThemeProvider and DataProvider in page.tsx or a wrapper */}
+        {children}
       </body>
     </html>
   );
