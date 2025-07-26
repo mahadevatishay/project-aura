@@ -1,7 +1,7 @@
-'use client'; // This is a client component
+'use client';
 
 import React from 'react';
-import { useData } from '@/context/DataContext';
+import { useData } from '../context/DataContext'; // Changed from '@/context/DataContext'
 
 export default function InsightsPanel() {
   const { getInsights } = useData();

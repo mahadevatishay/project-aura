@@ -19,7 +19,7 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 // A simple hook to use our context
-export function useData() {
+export function useData() { // <--- ENSURE 'export' IS HERE
   const context = useContext(DataContext);
   if (context === undefined) {
     throw new Error('useData must be used within a DataProvider');

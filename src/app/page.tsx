@@ -1,6 +1,6 @@
-import MoodForm from '@/components/MoodForm';
-import MoodChart from '@/components/MoodChart';
-import InsightsPanel from '@/components/InsightsPanel';
+import MoodForm from './components/MoodForm'; 
+import MoodChart from './components/MoodChart';
+import InsightsPanel from './components/InsightsPanel'; 
 
 export default function HomePage() {
   return (
@@ -11,17 +11,12 @@ export default function HomePage() {
       </header>
 
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {/* Mood Form - takes 1 column on large screens, full width on small */}
         <div className="lg:col-span-1">
           <MoodForm />
         </div>
-        
-        {/* Mood Chart - takes 2 columns on large screens, full width on small */}
         <div className="lg:col-span-2">
           <MoodChart />
         </div>
-        
-        {/* Insights Panel - spans all columns on large screens, full width on small */}
         <div className="lg:col-span-3">
           <InsightsPanel />
         </div>

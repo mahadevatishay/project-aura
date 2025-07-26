@@ -1,7 +1,7 @@
-'use client'; // This is a client component
+'use client';
 
 import React, { useState } from 'react';
-import { useData } from '@/context/DataContext';
+import { useData } from '../context/DataContext'; // Changed from '@/context/DataContext'
 
 export default function MoodForm() {
   const { addEntry } = useData();
@@ -11,13 +11,13 @@ export default function MoodForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newEntry = {
-      date: new Date().toISOString().split('T')[0], // Gets current date in YYYY-MM-DD format
+      date: new Date().toISOString().split('T')[0],
       mood: mood,
-      activities: activities.split(',').map(activity => activity.trim()).filter(activity => activity !== ''), // Split by comma, trim whitespace, filter out empty strings
+      activities: activities.split(',').map(activity => activity.trim()).filter(activity => activity !== ''),
     };
     addEntry(newEntry);
-    setMood(5); // Reset mood slider
-    setActivities(''); // Clear activities input
+    setMood(5);
+    setActivities('');
   };
 
   return (
@@ -36,7 +36,7 @@ export default function MoodForm() {
           value={mood}
           onChange={(e) => setMood(Number(e.target.value))}
           className="w-full h-2 bg-blue-100 rounded-lg appearance-none cursor-pointer thumb-blue-500"
-          style={{ '--tw-ring-color': '#3b82f6' } as React.CSSProperties} // Custom style for thumb color
+          style={{ '--tw-ring-color': '#3b82f6' } as React.CSSProperties}
         />
       </div>
       
