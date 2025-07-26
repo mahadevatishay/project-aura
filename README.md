@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Project Aura: AI-Powered Mood & Productivity Dashboard
+A personal dashboard to track mood and activities, with a rule-based engine to provide actionable insights.
 
-## Getting Started
+Features
+Daily Logging: Users can log their mood and activities for each day.
 
-First, run the development server:
+Data Visualization: A line chart displays mood trends over time.
 
-```bash
+AI Insights: A rule-based system analyzes user data and provides personalized recommendations.
+
+Data Persistence: User data is saved locally in the browser's localStorage so it persists across sessions.
+
+Responsive Design: Built with Tailwind CSS for a seamless experience on all devices.
+
+Technologies Used
+Framework: Next.js (with App Router)
+
+Styling: Tailwind CSS
+
+State Management: React Context API
+
+Data Visualization: Recharts
+
+Language: TypeScript
+
+Simulated AI: Custom rule-based engine
+
+Getting Started
+To run this project locally:
+
+Clone the repository:
+
+git clone https://github.com/your-username/aura.git
+cd aura
+
+(Replace your-username/aura.git with your actual GitHub repository URL once you create it.)
+
+Install dependencies:
+
+npm install
+
+Run the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Development Approach
+This project was built following a phased approach to deliver a functional prototype quickly. A key design decision was to use a rule-based engine to simulate AI, which allowed for a fast implementation of the core concept without relying on a complex, external machine learning API. Data persistence is handled via localStorage for simplicity and immediate user experience.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployment
+This application is designed to be easily deployed to Vercel. See the deployment steps below.
