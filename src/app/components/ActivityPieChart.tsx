@@ -27,8 +27,7 @@ export default function ActivityPieChart() {
 
   // Calculate activity frequencies
   const activityCounts: { [key: string]: number } = {};
-  entries.forEach(entry => {
-    // Removed 'entry' as it was unused in the forEach callback
+  entries.forEach(entry => { // 'entry' is used here, so keep it
     entry.activities.forEach(activity => {
       const trimmedActivity = activity.trim().toLowerCase();
       if (trimmedActivity) { // Ensure activity is not empty

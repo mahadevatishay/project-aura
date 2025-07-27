@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, Auth /* Removed: User */ } from 'firebase/auth'; // Removed unused 'User' import
+import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, Auth } from 'firebase/auth'; // Removed unused 'User' import
 import { getFirestore, doc, setDoc, collection, query, onSnapshot, Firestore } from 'firebase/firestore';
 
 // Global variables provided by the Canvas environment
