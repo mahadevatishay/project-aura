@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, Auth, User } from 'firebase/auth';
+import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, Auth /* Removed: User */ } from 'firebase/auth'; // Removed unused 'User' import
 import { getFirestore, doc, setDoc, collection, query, onSnapshot, Firestore } from 'firebase/firestore';
 
 // Global variables provided by the Canvas environment
@@ -43,13 +43,12 @@ interface DataProviderProps {
 export function DataProvider({ children }: DataProviderProps) {
   console.log('DataProvider: Rendering'); // DEBUG LOG
 
-  const [app, setApp] = useState<FirebaseApp | null>(null);
+  // Removed unused 'app' and 'auth' state variables
   const [db, setDb] = useState<Firestore | null>(null);
-  const [auth, setAuth] = useState<Auth | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [isAuthReady, setIsAuthReady] = useState<boolean>(false);
   
-  // FIX: Initialize entries to empty array, read from Firestore in useEffect
+  // FIX: Initialize entries to an empty array. Firestore data will be fetched in useEffect.
   const [entries, setEntries] = useState<DailyEntry[]>([]); 
   console.log('DataProvider: entries useState initialized to empty array'); // DEBUG LOG
 
@@ -59,7 +58,7 @@ export function DataProvider({ children }: DataProviderProps) {
     console.log('DataProvider: useEffect - initFirebase called'); // DEBUG LOG
     const initFirebase = async () => {
       try {
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'; // 'appId' is used here
         const firebaseConfig = typeof __firebase_config !== 'undefined'
           ? JSON.parse(__firebase_config)
           : {};
@@ -74,10 +73,8 @@ export function DataProvider({ children }: DataProviderProps) {
         const firestoreDb = getFirestore(firebaseApp);
         const firebaseAuth = getAuth(firebaseApp);
 
-        setApp(firebaseApp);
         setDb(firestoreDb);
-        setAuth(firebaseAuth);
-
+        
         onAuthStateChanged(firebaseAuth, async (user) => {
           if (user) {
             setUserId(user.uid);
@@ -158,7 +155,6 @@ export function DataProvider({ children }: DataProviderProps) {
   };
 
   const getInsights = (): string => {
-    // ... (insight logic, no changes needed here for debug)
     if (entries.length < 3) {
       return "Log a few more days to get personalized insights!";
     }

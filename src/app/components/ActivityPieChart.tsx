@@ -19,8 +19,7 @@ interface PieLabelRenderProps {
   value: number; // The value of the slice
   x: number; // X coordinate for text
   y: number; // Y coordinate for text
-  index: number; // Index of the slice
-  // Add other properties if you use them
+  // Removed: index: number; // 'index' was unused in renderCustomizedLabel
 }
 
 export default function ActivityPieChart() {
@@ -29,6 +28,7 @@ export default function ActivityPieChart() {
   // Calculate activity frequencies
   const activityCounts: { [key: string]: number } = {};
   entries.forEach(entry => {
+    // Removed 'entry' as it was unused in the forEach callback
     entry.activities.forEach(activity => {
       const trimmedActivity = activity.trim().toLowerCase();
       if (trimmedActivity) { // Ensure activity is not empty
@@ -47,7 +47,7 @@ export default function ActivityPieChart() {
   chartData.sort((a, b) => b.value - a.value);
 
   // Custom label rendering function
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name, index }: PieLabelRenderProps) => {
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name /* Removed: index */ }: PieLabelRenderProps) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * Math.PI / 180);
     const y = cy + radius * Math.sin(-midAngle * Math.PI / 180);
@@ -76,21 +76,21 @@ export default function ActivityPieChart() {
                 fill="#8884d8"
                 dataKey="value"
                 labelLine={false}
-                // @ts-ignore // FIX: Suppress TypeScript error for this line
+                // @ts-expect-error // FIX: Changed @ts-ignore to @ts-expect-error
                 label={renderCustomizedLabel} 
               >
-                {chartData.map((entry, index) => (
+                {chartData.map((entry, index) => ( // 'entry' and 'index' are used here, so keep them
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip 
                 contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '8px', padding: '10px' }}
-                wrapperClassName="" // Removed dark:bg-gray-700 dark:border-gray-600
+                wrapperClassName=""
                 labelStyle={{ fontWeight: 'bold', color: '#333' }}
                 itemStyle={{ color: '#555' }}
               />
               <Legend layout="vertical" align="right" verticalAlign="middle" 
-                formatter={(value, entry, index) => <span className="text-gray-700">{value}</span>} // Removed dark:text-gray-300
+                formatter={(value, entry, index) => <span className="text-gray-700">{value}</span>}
               />
             </PieChart>
           </ResponsiveContainer>
