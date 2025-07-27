@@ -37,19 +37,26 @@ export function useData() {
 }
 
 interface DataProviderProps {
-  children: ReactNode; // <--- ENSURE THIS IS ReactNode
+  children: ReactNode;
 }
 
 export function DataProvider({ children }: DataProviderProps) {
+  console.log('DataProvider: Rendering'); // DEBUG LOG
+
   const [app, setApp] = useState<FirebaseApp | null>(null);
   const [db, setDb] = useState<Firestore | null>(null);
   const [auth, setAuth] = useState<Auth | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [isAuthReady, setIsAuthReady] = useState<boolean>(false);
-  const [entries, setEntries] = useState<DailyEntry[]>([]);
+  
+  // FIX: Initialize entries to empty array, read from Firestore in useEffect
+  const [entries, setEntries] = useState<DailyEntry[]>([]); 
+  console.log('DataProvider: entries useState initialized to empty array'); // DEBUG LOG
+
 
   // 1. Initialize Firebase and Authenticate
   useEffect(() => {
+    console.log('DataProvider: useEffect - initFirebase called'); // DEBUG LOG
     const initFirebase = async () => {
       try {
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -71,7 +78,6 @@ export function DataProvider({ children }: DataProviderProps) {
         setDb(firestoreDb);
         setAuth(firebaseAuth);
 
-        // Sign in with custom token or anonymously
         onAuthStateChanged(firebaseAuth, async (user) => {
           if (user) {
             setUserId(user.uid);
@@ -88,34 +94,32 @@ export function DataProvider({ children }: DataProviderProps) {
               }
             } catch (authError) {
               console.error("Firebase Auth Error during sign-in:", authError);
-              setUserId(crypto.randomUUID()); // Fallback to a random ID if auth completely fails
+              setUserId(crypto.randomUUID());
             }
           }
-          setIsAuthReady(true); // Auth state is now determined
+          setIsAuthReady(true);
         });
 
       } catch (error) {
         console.error("Firebase initialization error:", error);
-        setUserId(crypto.randomUUID()); // Ensure userId is set even on init error
-        setIsAuthReady(true); // Mark as ready even on error to unblock UI
+        setUserId(crypto.randomUUID());
+        setIsAuthReady(true);
       }
     };
 
     initFirebase();
-  }, []); // Run only once on component mount
+  }, []);
 
   // 2. Fetch/Listen to Data from Firestore
   useEffect(() => {
+    console.log('DataProvider: useEffect - Firestore listener setup called. DB:', !!db, 'UserID:', !!userId, 'AuthReady:', isAuthReady); // DEBUG LOG
     if (!db || !userId || !isAuthReady) {
-      console.log("Waiting for DB, userId, or auth to be ready for Firestore listener.");
       return;
     }
 
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
     const userEntriesCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/entries`);
     const q = query(userEntriesCollectionRef);
-
-    console.log(`Setting up Firestore listener for user: ${userId} in app: ${appId}`);
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedEntries: DailyEntry[] = [];
@@ -135,8 +139,8 @@ export function DataProvider({ children }: DataProviderProps) {
     };
   }, [db, userId, isAuthReady]);
 
-  // 3. Add/Update Entry in Firestore
   const addEntry = async (newEntry: DailyEntry) => {
+    console.log('DataProvider: addEntry called'); // DEBUG LOG
     if (!db || !userId) {
       console.error("Firestore DB or userId not available. Cannot add entry.");
       return;
@@ -153,35 +157,27 @@ export function DataProvider({ children }: DataProviderProps) {
     }
   };
 
-  // Rule-based insight engine (remains largely the same)
   const getInsights = (): string => {
+    // ... (insight logic, no changes needed here for debug)
     if (entries.length < 3) {
       return "Log a few more days to get personalized insights!";
     }
-
     const sortedEntries = [...entries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     const lastSevenEntries = sortedEntries.slice(-7);
     const lastThreeEntries = sortedEntries.slice(-3);
-
-    // Rule 1: Consistent Low Mood
     const lowMoodThreshold = 4;
     const consecutiveLowMoodDays = lastSevenEntries.filter(entry => entry.mood <= lowMoodThreshold);
     if (consecutiveLowMoodDays.length >= 3) {
       return "Your mood has been consistently low recently. Consider reaching out to a friend, taking a mindful break, or engaging in a relaxing activity.";
     }
-
-    // Rule 2: Sudden Drop in Mood
     if (lastThreeEntries.length === 3) {
       const moodToday = lastThreeEntries[2].mood;
       const moodYesterday = lastThreeEntries[1].mood;
       const moodDayBefore = lastThreeEntries[0].mood;
-
       if (moodToday < moodYesterday && moodYesterday < moodDayBefore && moodToday <= 5) {
         return "Your mood seems to be consistently dropping over the last few days. It might be a good time to reflect, or try something new to lift your spirits!";
       }
     }
-
-    // Rule 3: High Mood After Specific Activity
     const activityImpact: { [key: string]: { highMoodCount: number; totalCount: number; averageMood: number; moodSum: number } } = {};
     entries.forEach(entry => {
       entry.activities.forEach(activity => {
@@ -198,7 +194,6 @@ export function DataProvider({ children }: DataProviderProps) {
         }
       });
     });
-
     for (const activity in activityImpact) {
       const stats = activityImpact[activity];
       if (stats.totalCount >= 2) {
@@ -208,32 +203,23 @@ export function DataProvider({ children }: DataProviderProps) {
         }
       }
     }
-
-    // Rule 4: Consistent High Productivity
     if (lastSevenEntries.length === 7) {
       const avgActivitiesPerDay = lastSevenEntries.reduce((sum, entry) => sum + entry.activities.length, 0) / 7;
       if (avgActivitiesPerDay >= 4) {
         return "You've been incredibly productive lately! Remember to also schedule some well-deserved rest and relaxation.";
       }
     }
-
-    // Rule 5: Low Productivity
     const recentActivitiesCount = lastSevenEntries.reduce((sum, entry) => sum + entry.activities.length, 0);
     if (lastSevenEntries.length >= 5 && recentActivitiesCount < 5) {
       return "You've logged fewer activities recently. Perhaps try setting one small, achievable goal for today to get started!";
     }
-
-    // Rule 6: Suggest New Activities
     if (entries.length >= 7) {
       const allActivities = new Set<string>();
       entries.forEach(entry => entry.activities.forEach(activity => allActivities.add(activity.trim().toLowerCase())));
-      
       if (allActivities.size < 5) {
         return "You seem to stick to a few core activities. How about trying something new this week to see how it impacts your mood?";
       }
     }
-
-    // Default Insight
     return "Keep logging your days! Consistent data helps us provide better insights.";
   };
 

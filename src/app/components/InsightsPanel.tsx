@@ -8,8 +8,8 @@ export default function InsightsPanel() {
   const insight = getInsights();
 
   return (
-    <div className="p-6 bg-purple-50 dark:bg-purple-900 rounded-lg shadow-md dark:shadow-lg border-l-4 border-purple-400 dark:border-purple-600 flex flex-col justify-center items-center text-center text-gray-900 dark:text-purple-200">
-      <h2 className="text-2xl font-semibold text-purple-800 dark:text-purple-300 mb-4">AI Insights</h2>
+    <div className="p-6 bg-purple-50 rounded-lg shadow-md border-l-4 border-purple-400 flex flex-col justify-center items-center text-center text-gray-900">
+      <h2 className="text-2xl font-semibold text-purple-800 mb-4">AI Insights</h2>
       <p className="text-lg leading-relaxed">{insight}</p>
     </div>
   );

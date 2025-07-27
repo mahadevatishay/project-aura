@@ -60,11 +60,11 @@ export default function ActivityPieChart() {
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-lg h-full flex flex-col text-gray-900 dark:text-gray-200">
+    <div className="p-6 bg-white rounded-lg shadow-md h-full flex flex-col text-gray-900">
       <h2 className="text-2xl font-semibold mb-6 text-center">Activity Distribution</h2>
       <div className="flex-grow flex items-center justify-center"> {/* Center content */}
         {chartData.length === 0 ? (
-          <p className="text-center text-gray-500 dark:text-gray-400 mt-10">Log some activities to see their distribution!</p>
+          <p className="text-center text-gray-500 mt-10">Log some activities to see their distribution!</p>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -85,12 +85,12 @@ export default function ActivityPieChart() {
               </Pie>
               <Tooltip 
                 contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '8px', padding: '10px' }}
-                wrapperClassName="dark:bg-gray-700 dark:border-gray-600"
+                wrapperClassName="" // Removed dark:bg-gray-700 dark:border-gray-600
                 labelStyle={{ fontWeight: 'bold', color: '#333' }}
                 itemStyle={{ color: '#555' }}
               />
               <Legend layout="vertical" align="right" verticalAlign="middle" 
-                formatter={(value, entry, index) => <span className="text-gray-700 dark:text-gray-300">{value}</span>}
+                formatter={(value, entry, index) => <span className="text-gray-700">{value}</span>} // Removed dark:text-gray-300
               />
             </PieChart>
           </ResponsiveContainer>
