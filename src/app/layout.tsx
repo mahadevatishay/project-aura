@@ -24,9 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* REMOVED: Inline script for theme */}
+      {/* Ensure there are NO custom script tags or other elements directly under <html> here */}
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`} // FIX: Added backticks here
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>
